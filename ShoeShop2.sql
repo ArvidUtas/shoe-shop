@@ -43,6 +43,7 @@ firstname varchar(20) not null,
 lastname varchar(20) not null,
 address varchar(50) not null,
 postcode int not null,
+email VARCHAR(30) UNIQUE,
 password VARCHAR(20),
 foreign key (postcode) references postcode(postcode) on update cascade); -- En adress kan inte vara utan postkod, men den kan ändras
 
@@ -119,14 +120,14 @@ values
 (5,600,5,44,'Röd'),
 (5,800,9,43,'Svart');
 
-insert into customer (firstname,lastname,address,postcode)
+insert into customer (firstname,lastname,address,postcode, password, email)
 values 
-('Arvid','Utas','Gamla gatan 1',83989),
-('James','Brown','Virriga vägen 7',84220),
-('Bob','Marley','Torftiga torget 10',12107),
-('Nina','Simone','Aspiga Allen 18',14840),
-('Björk','Björksson','Lata leden 9',19561),
-('Prince','Symbol','Sena stigen 6',23371);
+('Arvid','Utas','Gamla gatan 1',83989,'abc123','arvidutas@a.se'),
+('James','Brown','Virriga vägen 7',84220,'def123','jamesbrown@a.se'),
+('Bob','Marley','Torftiga torget 10',12107,'abc','bobmarley@a.se'),
+('Nina','Simone','Aspiga Allen 18',14840,'qwe','ninasimone@a.se'),
+('Björk','Björksson','Lata leden 9',19561,'asd','bjork@a.se'),
+('Prince','Symbol','Sena stigen 6',23371,'123','prince@a.se');
 
 insert into orders (order_time,customer_id,isActive) values
 ('2023-09-23',1,0),

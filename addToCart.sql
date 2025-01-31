@@ -1,8 +1,10 @@
 use shoeshop;
 select * from product;
+select * from customer;
 select * from orders;
 select * from orders_contains_product;
 -- ALTER TABLE customer ADD COLUMN password VARCHAR(20);
+-- ALTER TABLE customer ADD COLUMN email VARCHAR(30) UNIQUE ;
 -- UPDATE customer SET password = 'abc123' WHERE id=1;
 -- UPDATE customer SET password = 'def123' WHERE id=2;
 -- ALTER TABLE orders ADD COLUMN isActive boolean default TRUE;
