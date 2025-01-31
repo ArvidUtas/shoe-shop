@@ -117,7 +117,7 @@ values
 (2,1000,6,42,'Grön/Gul'),
 (3,1400,8,43,'Svart'),
 (4,999,14,37,'Vit'),
-(5,600,5,44,'Röd'),
+(5,600,0,44,'Röd'),
 (5,800,9,43,'Svart');
 
 insert into customer (firstname,lastname,address,postcode, password, email)

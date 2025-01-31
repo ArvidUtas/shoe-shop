@@ -1,5 +1,7 @@
 use shoeshop;
 select * from product;
+select * from model;
+select * from brand;
 select * from customer;
 select * from orders;
 select * from orders_contains_product;
@@ -9,6 +11,9 @@ select * from orders_contains_product;
 -- UPDATE customer SET password = 'def123' WHERE id=2;
 -- ALTER TABLE orders ADD COLUMN isActive boolean default TRUE;
 -- UPDATE orders SET isActive = FALSE;
+SELECT p.id, brand.name as brand, m.name, m.description, p.size, p.colour from brand
+INNER JOIN shoeshop.model m on brand.id = m.brand_id
+INNER JOIN shoeshop.product p on m.id = p.model_id WHERE p.stock != 0;
 
 DROP PROCEDURE IF EXISTS addToCart;
 delimiter //

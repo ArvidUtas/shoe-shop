@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class Repository {
@@ -30,8 +31,37 @@ public class Repository {
                 customerID = rs.getInt("id");
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); //TODO: fixa errorhantering
         }
         return customerID;
+    }
+
+    public ArrayList<Product> getProducts(){
+        ArrayList<Product> prodList = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection
+                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));) {
+
+            PreparedStatement stm = con.prepareStatement(
+                    "SELECT p.id, brand.name as brand, m.name as model, m.description, p.size, p.colour " +
+                            "FROM shoeshop.brand " +
+                            "INNER JOIN shoeshop.model m on brand.id = m.brand_id " +
+                            "INNER JOIN shoeshop.product p on m.id = p.model_id WHERE p.stock != 0;");
+
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String brand = rs.getString("brand");
+                String model = rs.getString("model");
+                String description = rs.getString("description");
+                int size = rs.getInt("size");
+                String colour = rs.getString("colour");
+                Product product = new Product(id,brand,model,description,size,colour);
+                prodList.add(product);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e); //TODO: fixa errorhantering
+        }
+        return prodList;
     }
 }

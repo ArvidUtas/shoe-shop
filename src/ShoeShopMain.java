@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ShoeShopMain {
@@ -9,7 +10,11 @@ public class ShoeShopMain {
 
     public ShoeShopMain() {
         customerID = login();
-        System.out.println(customerID);
+        System.out.println("Kund ID: " + customerID);
+        ArrayList<Product> prodList = rep.getProducts();
+        for (Product product : prodList) {
+            System.out.println(product);
+        }
     }
 
     private int login() {
