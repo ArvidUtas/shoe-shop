@@ -122,7 +122,7 @@ values
 
 insert into customer (firstname,lastname,address,postcode, password, email)
 values 
-('Arvid','Utas','Gamla gatan 1',83989,'abc123','arvidutas@a.se'),
+('Arvid','Utas','Gamla gatan 1',83989,'123','a@a.se'),
 ('James','Brown','Virriga vägen 7',84220,'def123','jamesbrown@a.se'),
 ('Bob','Marley','Torftiga torget 10',12107,'abc','bobmarley@a.se'),
 ('Nina','Simone','Aspiga Allen 18',14840,'qwe','ninasimone@a.se'),

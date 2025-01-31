@@ -21,12 +21,9 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", description='" + description + '\'' +
-                ", size=" + size +
-                ", colour='" + colour + '\'' +
-                '}';
+        return "Märke:\t" + brand +
+                "\tModel\t" + model + "\tBeskrivning:\t" + description +
+                "\tStorlek:\t" + size +
+                "\tFärg\t" + colour;
     }
 }

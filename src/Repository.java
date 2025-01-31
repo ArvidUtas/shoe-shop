@@ -36,6 +36,33 @@ public class Repository {
         return customerID;
     }
 
+    public Customer getCustomer(String email, String password){
+        Customer customer = null;
+        try (Connection con = DriverManager.getConnection
+                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));) {
+
+            PreparedStatement stm = con.prepareStatement(
+                    "SELECT id, firstname, lastname, address, postcode FROM shoeshop.customer " +
+                            "WHERE email = ? AND password = ?");
+            stm.setString(1,email);
+            stm.setString(2,password);
+
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("firstname") + " " + rs.getString("lastname");
+                String address = rs.getString("address");
+                int postcode = rs.getInt("postcode");
+                customer = new Customer(id,name,address,postcode,email);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e); //TODO: fixa errorhantering
+        }
+        return customer;
+    }
+
     public ArrayList<Product> getProducts(){
         ArrayList<Product> prodList = new ArrayList<>();
         try (Connection con = DriverManager.getConnection
