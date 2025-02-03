@@ -20,15 +20,18 @@ public class ShoeShopMain {
         }
         System.out.println();
 
+        System.out.print("Välj en vara att lägga i varukorgen, skriv dess ID (EXIT för att avbryta): ");
         while (sc.hasNext()) {
-            System.out.print("Välj en vara: ");
+            if (sc.next().equalsIgnoreCase("exit"))
+                break;
             if (sc.hasNextInt()) {
                 int userChoice = sc.nextInt();
                 if (userChoice < 0 || userChoice > prodList.size())
                     System.out.println("Felaktig inmatning. Skriv en siffra mellan 0 och " + (prodList.size() - 1) +
                             ". Försök igen.");
                 else {
-                    System.out.println("här lägs beställning"); //todo
+                    System.out.println(rep.addToCart(customer.getId(),
+                            prodList.get(userChoice).getId(), customer.getActiveOrder()));
                 }
             } else {
                 System.out.println("Felaktig inmatning. Skriv en siffra mellan 0 och " + (prodList.size() - 1) +

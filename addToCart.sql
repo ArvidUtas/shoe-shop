@@ -1,8 +1,8 @@
 use shoeshop;
-select * from product;
 select * from model;
 select * from brand;
 select * from customer;
+select * from product;
 select * from orders;
 select * from orders_contains_product;
 -- ALTER TABLE customer ADD COLUMN password VARCHAR(20);
@@ -22,11 +22,11 @@ SELECT customer.id, firstname, lastname, address, postcode,
         LIMIT 1) AS activeOrder FROM shoeshop.customer
     WHERE email = 'jamesbrown@a.se' AND password = 'def123' LIMIT 1;
 
-
+call addToCart(1,2,null);
 
 DROP PROCEDURE IF EXISTS addToCart;
 delimiter //
-CREATE PROCEDURE addToCart (IN customerID INT, IN orderID INT, IN productID INT)
+CREATE PROCEDURE addToCart (IN customerID INT, IN productID INT, IN orderID INT, OUT affectedRows INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -34,7 +34,7 @@ BEGIN
             RESIGNAL SET MESSAGE_TEXT = 'Error while running.';
         END;
     -- TODO: Lägg in mer specifika fel hanterare: DECLARE EXIT HANDLER FOR 1234
-    START TRANSACTION ;
+    START TRANSACTION;
         IF orderID IS NULL AND
            (SELECT count(*) FROM orders WHERE orders.isActive = TRUE AND customerID = orders.customer_id) = 0 THEN
             INSERT INTO orders (customer_id) VALUES (customerID);
@@ -46,9 +46,11 @@ BEGIN
             INSERT INTO orders_contains_product (product_id, orders_id, price)
             VALUES (productID, orderID, (SELECT price FROM product WHERE product.id = productID));
             UPDATE product SET stock = stock - 1 WHERE id = productID;
-        ELSE
+        -- ELSE
             -- returnera felmeddelande?
         END IF;
+        SET affectedRows = ROW_COUNT();
+    COMMIT;
 END//
 delimiter ;
 
