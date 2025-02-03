@@ -10,6 +10,8 @@ select * from orders_contains_product;
 -- UPDATE customer SET password = 'abc123' WHERE id=1;
 -- UPDATE customer SET password = 'def123' WHERE id=2;
 -- ALTER TABLE orders ADD COLUMN isActive boolean default TRUE;
+-- ALTER TABLE orders ADD COLUMN lastUpdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+ALTER TABLE orders_contains_product ADD COLUMN lastUpdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 -- UPDATE orders SET isActive = FALSE;
 SELECT p.id, brand.name as brand, m.name, m.description, p.size, p.colour from brand
     INNER JOIN shoeshop.model m on brand.id = m.brand_id
@@ -50,7 +52,7 @@ BEGIN
             -- returnera felmeddelande?
         END IF;
         SET affectedRows = ROW_COUNT();
+        SELECT orders_id FROM orders_contains_product ORDER BY lastUpdate DESC LIMIT 1 ;
     COMMIT;
 END//
 delimiter ;
-

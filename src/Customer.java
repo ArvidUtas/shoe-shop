@@ -46,4 +46,8 @@ public class Customer {
     public int getActiveOrder() {
         return activeOrder;
     }
+
+    public void setActiveOrder(int activeOrder) {
+        this.activeOrder = activeOrder;
+    }
 }

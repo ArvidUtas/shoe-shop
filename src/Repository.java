@@ -75,29 +75,32 @@ public class Repository {
         return prodList;
     }
 
-    public String addToCart(int customerID, int productID, int orderID){
+    public String addToCart(Customer customer, int productID){
         String outcome = "";
         CallableStatement stm;
         try (Connection con = DriverManager.getConnection(p.getProperty("url"), p.getProperty("username"),
                 p.getProperty("password"))){
-            if (orderID != 0) {
+            if (customer.getActiveOrder() != 0) {
                 stm = con.prepareCall("CALL shoeshop.addToCart(?,?,?,?)");
-                stm.setInt(1,customerID);
+                stm.setInt(1,customer.getId());
                 stm.setInt(2,productID);
-                stm.setInt(3,orderID);
+                stm.setInt(3,customer.getActiveOrder());
                 stm.registerOutParameter(4,Types.INTEGER);
             } else {
                 stm = con.prepareCall("CALL shoeshop.addToCart(?,?,null,?)");
-                stm.setInt(1,customerID);
+                stm.setInt(1,customer.getId());
                 stm.setInt(2,productID);
                 stm.registerOutParameter(3,Types.INTEGER);
             }
-            stm.executeQuery();
+            ResultSet rs = stm.executeQuery();
             int affectedRows = stm.getInt("affectedRows");
             if (affectedRows > 0)
                 outcome = "Produkten har lagts till i din beställning.";
             else
                 outcome = "Produkten kunde inte läggas till i din beställning. Försök igen.";
+            while (rs.next()){
+                    customer.setActiveOrder(rs.getInt("orders_id"));
+            }
         } catch (SQLException e) {
              //TODO: fixa errorhantering
             outcome = e.getMessage();

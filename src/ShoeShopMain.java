@@ -8,6 +8,7 @@ public class ShoeShopMain {
 
     public ShoeShopMain() {
         customer = login();
+        System.out.println();
         System.out.println("Välkommen " + customer.getName());
         System.out.println("Aktiv beställning:  " + customer.getActiveOrder()); // ta bort denna sen
         System.out.println();
@@ -22,21 +23,17 @@ public class ShoeShopMain {
 
         System.out.print("Välj en vara att lägga i varukorgen, skriv dess ID (EXIT för att avbryta): ");
         while (sc.hasNext()) {
-            if (sc.next().equalsIgnoreCase("exit"))
+            String userChoice = sc.next();
+            if (userChoice.equalsIgnoreCase("exit")) {
+                System.out.println("Hej då!");
                 break;
-            if (sc.hasNextInt()) {
-                int userChoice = sc.nextInt();
-                if (userChoice < 0 || userChoice > prodList.size())
-                    System.out.println("Felaktig inmatning. Skriv en siffra mellan 0 och " + (prodList.size() - 1) +
-                            ". Försök igen.");
-                else {
-                    System.out.println(rep.addToCart(customer.getId(),
-                            prodList.get(userChoice).getId(), customer.getActiveOrder()));
-                }
+            } else if (userChoice.matches("[0-" + (prodList.size() - 1)+ "]")) {
+                System.out.println(rep.addToCart(customer,
+                        prodList.get(Integer.parseInt(userChoice)).getId()));
+                System.out.print("Välj en vara att lägga i varukorgen, skriv dess ID (EXIT för att avbryta): ");
             } else {
-                System.out.println("Felaktig inmatning. Skriv en siffra mellan 0 och " + (prodList.size() - 1) +
-                        ". Försök igen.");
-                sc.nextLine();
+                System.out.print("Felaktig inmatning. Skriv en siffra mellan 0 och " + (prodList.size() - 1) +
+                        ". Försök igen: ");
             }
         }
     }
