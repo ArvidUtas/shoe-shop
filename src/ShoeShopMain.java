@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ShoeShopMain {
@@ -10,7 +9,11 @@ public class ShoeShopMain {
     public ShoeShopMain() {
         customer = login();
         System.out.println("Välkommen " + customer.getName());
+        System.out.println("Aktiv beställning:  " + customer.getActiveOrder()); // ta bort denna sen
+        System.out.println();
         System.out.println("Här är alla varor i lager:");
+        System.out.println();
+        System.out.println("ID:\tMärke:\t\t\tModell:\t\t\t\tStorlek:\tFärg:\t\tBeskrivning:"); //TODO: fixa formatering
         ArrayList<Product> prodList = rep.getProducts();
         for (Product product : prodList) {
             System.out.println(prodList.indexOf(product) + "\t" + product.toString());
@@ -39,7 +42,7 @@ public class ShoeShopMain {
         String email = "";
         String password = "";
         System.out.print("Välkommen! ");
-        while (customer == null) {
+                while (customer == null) {
             System.out.println("Skriv in din email-adress: ");
             email = sc.nextLine();
             System.out.println("Skriv in ditt lösenord: ");

@@ -15,35 +15,17 @@ public class Repository {
         }
     }
 
-    public int getCustomerID(String email, String password){
-        int customerID = 0;
-        try (Connection con = DriverManager.getConnection
-                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));) {
-
-            PreparedStatement stm = con.prepareStatement(
-                    "SELECT id FROM shoeshop.customer WHERE email = ? AND password = ?");
-            stm.setString(1,email);
-            stm.setString(2,password);
-
-            ResultSet rs = stm.executeQuery();
-
-            while (rs.next())
-                customerID = rs.getInt("id");
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e); //TODO: fixa errorhantering
-        }
-        return customerID;
-    }
-
     public Customer getCustomer(String email, String password){
         Customer customer = null;
         try (Connection con = DriverManager.getConnection
                 (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));) {
 
             PreparedStatement stm = con.prepareStatement(
-                    "SELECT id, firstname, lastname, address, postcode FROM shoeshop.customer " +
-                            "WHERE email = ? AND password = ?");
+                    "SELECT customer.id, firstname, lastname, address, postcode, " +
+                            "(SELECT orders.id FROM shoeshop.orders " +
+                            "WHERE orders.customer_id = customer.id AND orders.isActive = TRUE " +
+                            "ORDER BY orders.order_time DESC LIMIT 1) AS activeOrder " +
+                            "FROM shoeshop.customer WHERE email = ? AND password = ? LIMIT 1");
             stm.setString(1,email);
             stm.setString(2,password);
 
@@ -54,7 +36,8 @@ public class Repository {
                 String name = rs.getString("firstname") + " " + rs.getString("lastname");
                 String address = rs.getString("address");
                 int postcode = rs.getInt("postcode");
-                customer = new Customer(id,name,address,postcode,email);
+                int activeOrder = rs.getInt("activeOrder");
+                customer = new Customer(id,name,address,postcode,email,activeOrder);
             }
 
         } catch (SQLException e) {

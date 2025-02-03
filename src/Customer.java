@@ -4,6 +4,7 @@ public class Customer {
     private String address;
     private int postcode;
     private String email;
+    private int activeOrder;
 
     public Customer(int id, String name, String address, int postcode, String email) {
         this.id = id;
@@ -11,6 +12,15 @@ public class Customer {
         this.address = address;
         this.postcode = postcode;
         this.email = email;
+    }
+
+    public Customer(int id, String name, String address, int postcode, String email, int activeOrder) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.postcode = postcode;
+        this.email = email;
+        this.activeOrder = activeOrder;
     }
 
     public int getId() {
@@ -31,5 +41,9 @@ public class Customer {
 
     public String getEmail() {
         return email;
+    }
+
+    public int getActiveOrder() {
+        return activeOrder;
     }
 }
