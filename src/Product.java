@@ -21,6 +21,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return brand + "\t\t\t" + model + "\t\t\t\t" + size + "\t\t" + colour + "\t" + description;
+        return String.format("%-15s %-18s %-10d %-10s %-10s%n",brand, model, size, colour, description);
     }
 }

@@ -14,10 +14,10 @@ public class ShoeShopMain {
         System.out.println();
         System.out.println("Här är alla varor i lager:");
         System.out.println();
-        System.out.println("ID:\tMärke:\t\t\tModell:\t\t\t\tStorlek:\tFärg:\t\tBeskrivning:"); //TODO: fixa formatering
+        System.out.format("%-4s %-15s %-18s %-10s %-10s %-10s%n","ID:","Märke:","Modell:","Storlek:","Färg:","Beskrivning:");
         ArrayList<Product> prodList = rep.getProducts();
         for (Product product : prodList) {
-            System.out.println(prodList.indexOf(product) + "\t" + product.toString());
+            System.out.print(prodList.indexOf(product) + " \t " + product.toString());
         }
         System.out.println();
 
