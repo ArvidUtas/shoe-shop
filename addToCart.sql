@@ -3,6 +3,7 @@ select * from model;
 select * from brand;
 select * from customer;
 select * from product;
+select * from out_of_stock;
 select * from orders;
 select * from orders_contains_product;
 -- ALTER TABLE customer ADD COLUMN password VARCHAR(20);
@@ -55,4 +56,22 @@ BEGIN
         SELECT orders_id FROM orders_contains_product ORDER BY lastUpdate DESC LIMIT 1 ;
     COMMIT;
 END//
+delimiter ;
+
+
+CREATE TABLE out_of_stock (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    time_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE);
+
+DROP TRIGGER IF EXISTS after_product_update;
+delimiter //
+CREATE TRIGGER after_product_update AFTER UPDATE ON product
+    FOR EACH ROW
+    BEGIN
+        IF NEW.stock = 0 THEN
+            INSERT INTO out_of_stock (product_id) VALUES (NEW.id);
+        END IF;
+    END //
 delimiter ;

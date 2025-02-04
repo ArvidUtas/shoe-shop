@@ -62,6 +62,12 @@ orders_id int not null,
 foreign key (product_id) references product(id) on delete set null, -- Om produkten skulle tas bort kan man ändå räkna summan på ordern
 foreign key (orders_id) references orders(id) on delete cascade); -- Om beställningen tas bort så behöver den inte mappas
 
+CREATE TABLE out_of_stock (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+product_id INT NOT NULL,
+time_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE);
+
 insert into brand (name) values 
 ('ecco'),
 ('adidas'),
@@ -153,6 +159,15 @@ create index IX_name on model(name); -- Kommer finnas många och kommer ofta sö
 create index IX_city on postcode(city); -- Finns väldigt många post-orter, om man söker på postkod får man oftast inte en hel stad
 create index IX_order_time on orders(order_time); -- Kommer antagligen sökas ofta av redovisningsskäl
 
-
+DROP TRIGGER IF EXISTS after_product_update;
+delimiter //
+CREATE TRIGGER after_product_update AFTER UPDATE ON product
+    FOR EACH ROW
+BEGIN
+    IF NEW.stock = 0 THEN
+        INSERT INTO out_of_stock (product_id) VALUES (NEW.id);
+    END IF;
+END //
+delimiter ;
 
 
