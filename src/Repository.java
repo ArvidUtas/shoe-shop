@@ -19,7 +19,7 @@ public class Repository {
     public Customer getCustomer(String email, String password) {
         Customer customer = null;
         try (Connection con = DriverManager.getConnection
-                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));) {
+                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"))) {
 
             PreparedStatement stm = con.prepareStatement(
                     "SELECT customer.id, firstname, lastname, address, postcode, " +
@@ -50,7 +50,7 @@ public class Repository {
     public ArrayList<Product> getProducts() {
         ArrayList<Product> prodList = new ArrayList<>();
         try (Connection con = DriverManager.getConnection
-                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));) {
+                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"))) {
 
             PreparedStatement stm = con.prepareStatement(
                     "SELECT p.id, brand.name as brand, m.name as model, m.description, p.size, p.colour, p.price " +
@@ -78,7 +78,7 @@ public class Repository {
     }
 
     public String addToCart(Customer customer, int productID) {
-        String outcome = "";
+        String outcome;
         final String outcomeSuccess = "Produkten har lagts till i din beställning.";
         final String outcomeFail = "Produkten kunde inte läggas till i din beställning. Försök igen.";
         CallableStatement stm;
@@ -117,7 +117,7 @@ public class Repository {
         ArrayList<Product> receipt = new ArrayList<>();
 
         try (Connection con = DriverManager.getConnection
-                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));) {
+                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"))) {
             PreparedStatement stm = con.prepareStatement(
                     "SELECT p.id, brand.name as brand, m.name as model, p.size, p.colour, p.price " +
                             "FROM shoeshop.orders_contains_product ocp " +
@@ -146,7 +146,7 @@ public class Repository {
 
     public boolean closeOrder(int orderID) {
         try (Connection con = DriverManager.getConnection
-                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));) {
+                (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"))) {
 
             PreparedStatement stm = con.prepareStatement("UPDATE shoeshop.orders SET isActive = FALSE WHERE id = ?");
             stm.setInt(1, orderID);

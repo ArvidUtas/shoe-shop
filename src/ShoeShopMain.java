@@ -16,8 +16,8 @@ public class ShoeShopMain {
     }
 
     private Customer login() {
-        String email = "";
-        String password = "";
+        String email;
+        String password;
         System.out.print("Välkommen! ");
         while (customer == null) {
             System.out.println("Skriv in din email-adress: ");
@@ -32,7 +32,7 @@ public class ShoeShopMain {
     }
 
     private void addProductsToCart() {
-        String userChoice = "";
+        String userChoice;
         System.out.println("\nVälkommen " + customer.getName());
         System.out.println("Aktiv beställning: #" + customer.getActiveOrder());
         System.out.println("\nHär är alla varor i lager:\n");
@@ -59,7 +59,7 @@ public class ShoeShopMain {
     }
 
     private void payOrder() {
-        String userChoice = "";
+        String userChoice;
         System.out.print("Vill du avsluta din beställning nu? Ja/Nej: ");
         while (sc.hasNext()) {
             userChoice = sc.nextLine();
