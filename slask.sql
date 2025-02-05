@@ -7,6 +7,7 @@ select * from product;
 select * from out_of_stock;
 select * from orders;
 select * from orders_contains_product;
+alter table product modify column stock int unsigned;
 -- ALTER TABLE customer ADD COLUMN password VARCHAR(20);
 -- ALTER TABLE customer ADD COLUMN email VARCHAR(30) UNIQUE ;
 -- UPDATE customer SET password = 'abc123' WHERE id=1;
@@ -41,3 +42,15 @@ FROM shoeshop.orders_contains_product ocp
 WHERE ocp.orders_id = ?;
 
 select * from orders_contains_product ocp where ocp.orders_id = 4;
+
+CREATE TABLE out_of_stock (
+                              id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                              product_id INT NOT NULL,
+                              time_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                              FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE);
+
+SELECT customer.id, firstname, lastname, address, postcode,
+                            (SELECT id FROM shoeshop.orders
+                            WHERE orders.customer_id = customer.id AND orders.isActive = TRUE
+                            ORDER BY order_time DESC LIMIT 1) AS activeOrder
+                            FROM shoeshop.customer WHERE email = 'dfg' AND password = 'sdfg' LIMIT 1;

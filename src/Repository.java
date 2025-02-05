@@ -11,7 +11,8 @@ public class Repository {
         try {
             p.load(new FileInputStream("src/database.properties"));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Fel vid läsning av properties-fil. Avslutar programmet");
+            System.exit(1);
         }
     }
 
@@ -41,7 +42,7 @@ public class Repository {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e); //TODO: fixa errorhantering
+            System.err.println("Fel vid läsning från databas. Error kod: " + e.getErrorCode() + "Försök igen.");
         }
         return customer;
     }
@@ -71,7 +72,7 @@ public class Repository {
                 prodList.add(product);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e); //TODO: fixa errorhantering
+            System.err.println("Fel vid läsning från databas. Error kod: " + e.getErrorCode());
         }
         return prodList;
     }
@@ -103,40 +104,41 @@ public class Repository {
                 customer.setActiveOrder(rs.getInt("orders_id"));
             }
         } catch (SQLException e) {
-            //TODO: fixa errorhantering
             outcome = e.getMessage();
+            if (outcome.startsWith("Data truncation: ")) {
+                outcome = outcome.replace("Data truncation: ", "");
+            }
         }
         return outcome;
     }
 
     public ArrayList<Product> getReceipt(int orderID) {
         ArrayList<Product> receipt = new ArrayList<>();
+
         try (Connection con = DriverManager.getConnection
                 (p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));) {
-
             PreparedStatement stm = con.prepareStatement(
-                    "SELECT p.id, brand.name as brand, m.name as model, m.description, p.size, p.colour, p.price " +
+                    "SELECT p.id, brand.name as brand, m.name as model, p.size, p.colour, p.price " +
                             "FROM shoeshop.orders_contains_product ocp " +
                             "INNER JOIN shoeshop.product p ON ocp.product_id = p.id " +
                             "INNER JOIN shoeshop.model m ON p.model_id = m.id " +
                             "INNER JOIN shoeshop.brand ON m.brand_id = brand.id " +
                             "WHERE ocp.orders_id = ?;");
             stm.setInt(1, orderID);
-            ResultSet rs = stm.executeQuery();
 
+            ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String brand = rs.getString("brand");
                 String model = rs.getString("model");
-                String description = rs.getString("description");
                 int size = rs.getInt("size");
                 String colour = rs.getString("colour");
                 int price = rs.getInt("price");
-                Product product = new Product(id, brand, model, description, size, colour, price);
+                Product product = new Product(id, brand, model, null, size, colour, price);
                 receipt.add(product);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e); //TODO: fixa errorhantering
+            System.err.println("Fel vid läsning från databas. Error kod: " + e.getErrorCode());
         }
         return receipt;
     }
@@ -152,7 +154,7 @@ public class Repository {
             if (updatedRows > 0)
                 return true;
         } catch (SQLException e) {
-            throw new RuntimeException(e); //TODO: fixa errorhantering
+            System.err.println("Fel vid läsning från databas. Error kod: " + e.getErrorCode());
         }
     return false;
     }
