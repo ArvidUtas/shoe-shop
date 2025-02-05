@@ -1,7 +1,9 @@
 use shoeshop;
 
 set @x = 0;
-call addToCart(1,18,6,@x);
+call addToCart(3,5,null,@x);
+call addToCart(1,5,6,@x);
+
 select @x;
 
 DROP PROCEDURE IF EXISTS addToCart;
@@ -30,16 +32,12 @@ BEGIN
             INSERT INTO orders_contains_product (product_id, orders_id, price)
             VALUES (productID, orderID, (SELECT price FROM product WHERE product.id = productID));
             UPDATE product SET stock = stock - 1 WHERE id = productID;
-        ELSE
-            SELECT 'Error: incorrect ';
         END IF;
         SET affectedRows = ROW_COUNT();
         SELECT orders_id FROM orders_contains_product ORDER BY lastUpdate DESC LIMIT 1 ;
     COMMIT;
 END//
 delimiter ;
-
-
 
 
 DROP TRIGGER IF EXISTS after_product_update;

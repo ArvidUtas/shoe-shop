@@ -79,6 +79,8 @@ public class Repository {
 
     public String addToCart(Customer customer, int productID) {
         String outcome = "";
+        final String outcomeSuccess = "Produkten har lagts till i din beställning.";
+        final String outcomeFail = "Produkten kunde inte läggas till i din beställning. Försök igen.";
         CallableStatement stm;
         try (Connection con = DriverManager.getConnection(p.getProperty("url"), p.getProperty("username"),
                 p.getProperty("password"))) {
@@ -97,17 +99,16 @@ public class Repository {
             ResultSet rs = stm.executeQuery();
             int affectedRows = stm.getInt("affectedRows");
             if (affectedRows > 0)
-                outcome = "Produkten har lagts till i din beställning.";
+                outcome = outcomeSuccess;
             else
-                outcome = "Produkten kunde inte läggas till i din beställning. Försök igen.";
+                outcome = outcomeFail;
             while (rs.next()) {
                 customer.setActiveOrder(rs.getInt("orders_id"));
             }
         } catch (SQLException e) {
             outcome = e.getMessage();
-            if (outcome.startsWith("Data truncation: ")) {
-                outcome = outcome.replace("Data truncation: ", "");
-            }
+            if (outcome.startsWith("Data truncation: "))
+                outcome = outcome.replace("Data truncation: ", "Error: ");
         }
         return outcome;
     }

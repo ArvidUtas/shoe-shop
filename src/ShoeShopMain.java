@@ -39,7 +39,7 @@ public class ShoeShopMain {
         System.out.format("%-4s %-15s %-18s %-10s %-10s %-10s%n","ID:","Märke:","Modell:","Storlek:","Färg:","Beskrivning:");
         ArrayList<Product> prodList = rep.getProducts();
         for (Product product : prodList) {
-            System.out.print(prodList.indexOf(product) + " \t " + product.toString());
+            System.out.print((prodList.indexOf(product) + 1) + " \t " + product.toString());
         }
 
         System.out.print("\nVälj en vara att lägga i varukorgen, skriv dess ID (EXIT för att avbryta): ");
@@ -47,12 +47,12 @@ public class ShoeShopMain {
             userChoice = sc.nextLine();
             if (userChoice.trim().equalsIgnoreCase("exit")) {
                 break;
-            } else if (userChoice.trim().matches("[0-" + (prodList.size() - 1)+ "]")) {
+            } else if (userChoice.trim().matches("[1-" + prodList.size() + "]")) {
                 System.out.println(rep.addToCart(customer,
-                        prodList.get(Integer.parseInt(userChoice)).getId()));
+                        prodList.get(Integer.parseInt(userChoice) - 1).getId()));
                 System.out.print("Välj en vara att lägga i varukorgen, skriv dess ID (EXIT för att gå vidare): ");
             } else {
-                System.out.print("Felaktig inmatning. Skriv en siffra mellan 0 och " + (prodList.size() - 1) +
+                System.out.print("Felaktig inmatning. Skriv en siffra mellan 1 och " + prodList.size() +
                         ". Försök igen: ");
             }
         }
@@ -77,7 +77,6 @@ public class ShoeShopMain {
                     customer.setActiveOrder(0);
                 else
                     System.out.println("Beställningen kunde inte avslutas. Försök igen senare.");
-                System.out.println();
                 break;
             } else if (userChoice.trim().equalsIgnoreCase("nej")) {
                 break;
